@@ -34,5 +34,5 @@ model Customer {
   withCoffee       String
   comments         String
   weekId           String?  @db.ObjectId
-  Week             Week?    @relation(fields: [weekId], references: [id])
+  week             Week?    @relation(fields: [weekId], references: [id])
 }

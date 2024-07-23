@@ -3,8 +3,8 @@ export interface CustomerProps {
     name: string
     quantityOfPeople: number
     roomNumber: number
-    checkInDate: Date
-    checkOutDate: Date
+    checkInDate: string
+    checkOutDate: string
     daysOfWeek: string
     amount: number
     deposit: number

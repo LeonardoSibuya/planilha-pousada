@@ -16,8 +16,8 @@ class CreateCustomerController {
             roomNumber,
             withCoffee
         } = request.body as {
-            checkInDate: Date,
-            checkOutDate: Date,
+            checkInDate: string,
+            checkOutDate: string,
             comments: string,
             daysOfWeek: string,
             amount: number,
@@ -31,16 +31,16 @@ class CreateCustomerController {
         const createCustomerService = new CreateCustomerService()
 
         const result = await createCustomerService.execute({
-            checkInDate,
-            checkOutDate,
-            comments,
-            daysOfWeek,
-            amount,
-            deposit,
             name,
             quantityOfPeople,
             roomNumber,
+            checkInDate,
+            checkOutDate,
+            daysOfWeek,
+            amount,
+            deposit,
             withCoffee,
+            comments,
         })
 
         response.send(result)

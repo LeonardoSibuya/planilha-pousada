@@ -1,3 +1,4 @@
+import { parse } from 'date-fns'
 import { CustomerProps } from "../entities/customer"
 import prismaClient from "../prisma"
 
@@ -17,14 +18,24 @@ class CreateCustomerService {
         withCoffee
     }: CustomerProps) {
 
-        const checkIn = checkInDate.getDate()
-        const checkOut = checkOutDate.getDate()
+        const checkInParsed = parse(checkInDate, 'dd/MM/yyyy', new Date())
+        const checkOutParsed = parse(checkOutDate, 'dd/MM/yyyy', new Date())
 
         try {
-            if (checkIn == checkOut) {
-                throw new Error('As datas de check-in e check-out devem ser diferentes')
-            } else if (checkInDate == null || checkOutDate == null) {
+            if (checkInParsed >= checkOutParsed) {
+                throw new Error('O check-out deve ser após a data de check-in')
+            } else if (checkInParsed == null || checkOutParsed == null) {
                 throw new Error('As datas de check-in e check-out não podem ser NULL')
+            }
+
+            if (deposit > amount) throw new Error("Deposito não pode ser maior que o total")
+
+            let week = await prismaClient.week.findFirst()
+
+            if (!week) {
+                week = await prismaClient.week.create({
+                    data: {}
+                })
             }
 
             const newCustomer = await prismaClient.customer.create({
@@ -33,14 +44,15 @@ class CreateCustomerService {
                     name: name,
                     quantityOfPeople: quantityOfPeople,
                     roomNumber: roomNumber,
-                    checkInDate: checkInDate,
-                    checkOutDate: checkOutDate,
+                    checkInDate: checkInParsed,
+                    checkOutDate: checkOutParsed,
                     daysOfWeek: daysOfWeek,
                     amount: amount,
                     deposit: deposit,
                     debt: amount - deposit,
                     withCoffee: withCoffee,
                     comments: comments,
+                    weekId: week.id
                 },
             })
 

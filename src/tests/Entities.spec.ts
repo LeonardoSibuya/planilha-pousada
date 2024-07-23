@@ -1,20 +1,16 @@
 import { expect, test } from 'vitest'
 import { CreateCustomerService } from '../services/CreateCustomerService'
+import { formatISO, parseISO } from 'date-fns'
 
-test('create an customer', async () => {
+test('create a customer', async () => {
     const customerService = new CreateCustomerService()
 
-    const startDate = new Date()
-    const endDate = new Date()
-
-    endDate.setDate(endDate.getDate() + 1)
-
     const customerData = {
-        name: "john doe",
+        name: "Fulano pelo Teste",
         quantityOfPeople: 2,
         roomNumber: 4,
-        checkInDate: startDate,
-        checkOutDate: endDate,
+        checkInDate: "10/07/2024",
+        checkOutDate: "11/07/2024",
         daysOfWeek: "seg a ter",
         amount: 1500,
         deposit: 1000,
@@ -24,12 +20,15 @@ test('create an customer', async () => {
 
     const result = await customerService.execute(customerData)
 
+    const expectedCheckInDate = parseISO(formatISO(new Date(2024, 6, 10)))
+    const expectedCheckOutDate = parseISO(formatISO(new Date(2024, 6, 11)))
+
     expect(result.data).toMatchObject({
-        name: 'john doe',
+        name: 'Fulano pelo Teste',
         quantityOfPeople: 2,
         roomNumber: 4,
-        checkInDate: startDate,
-        checkOutDate: endDate,
+        checkInDate: expectedCheckInDate,
+        checkOutDate: expectedCheckOutDate,
         daysOfWeek: 'seg a ter',
         amount: 1500,
         deposit: 1000,
